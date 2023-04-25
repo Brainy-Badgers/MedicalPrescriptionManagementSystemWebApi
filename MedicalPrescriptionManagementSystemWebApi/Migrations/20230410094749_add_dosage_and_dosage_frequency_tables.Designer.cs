@@ -4,6 +4,7 @@ using MedicalPrescriptionManagementSystemWebApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MedicalPrescriptionManagementSystemWebApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230410094749_add_dosage_and_dosage_frequency_tables")]
+    partial class add_dosage_and_dosage_frequency_tables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -216,113 +218,6 @@ namespace MedicalPrescriptionManagementSystemWebApi.Migrations
                     b.ToTable("Medicines");
                 });
 
-            modelBuilder.Entity("MedicalPrescriptionManagementSystemWebApi.Models.MedicinePrescription", b =>
-                {
-                    b.Property<int>("MedicinePrescriptionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MedicinePrescriptionId"), 1L, 1);
-
-                    b.Property<int>("DosageFrequencyId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DosageId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsComplete")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("MedicineId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MedicineQty")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PrescriptionId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("MedicinePrescriptionId");
-
-                    b.HasIndex("DosageFrequencyId");
-
-                    b.HasIndex("DosageId");
-
-                    b.HasIndex("MedicineId");
-
-                    b.HasIndex("PrescriptionId");
-
-                    b.ToTable("MedicinePrescription");
-                });
-
-            modelBuilder.Entity("MedicalPrescriptionManagementSystemWebApi.Models.Patient", b =>
-                {
-                    b.Property<int>("PatientId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PatientId"), 1L, 1);
-
-                    b.Property<string>("AddressLine01")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AddressLine02")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("Dob")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NIC")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TelephoneNo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("PatientId");
-
-                    b.ToTable("Patients");
-                });
-
             modelBuilder.Entity("MedicalPrescriptionManagementSystemWebApi.Models.Pharmacist", b =>
                 {
                     b.Property<int>("PharmacistId")
@@ -356,41 +251,6 @@ namespace MedicalPrescriptionManagementSystemWebApi.Migrations
                         .IsUnique();
 
                     b.ToTable("Pharmacists");
-                });
-
-            modelBuilder.Entity("MedicalPrescriptionManagementSystemWebApi.Models.Prescription", b =>
-                {
-                    b.Property<int>("PrescriptionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PrescriptionId"), 1L, 1);
-
-                    b.Property<DateTime?>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("DoctorId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsComplete")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("PatientId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PrescriptionDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("PrescriptionId");
-
-                    b.ToTable("Prescriptions");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -537,41 +397,6 @@ namespace MedicalPrescriptionManagementSystemWebApi.Migrations
                     b.Navigation("ApplicationUser");
                 });
 
-            modelBuilder.Entity("MedicalPrescriptionManagementSystemWebApi.Models.MedicinePrescription", b =>
-                {
-                    b.HasOne("MedicalPrescriptionManagementSystemWebApi.Models.DosageFrequency", "DosageFrequency")
-                        .WithMany("MedicinePrescriptions")
-                        .HasForeignKey("DosageFrequencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MedicalPrescriptionManagementSystemWebApi.Models.Dosage", "Dosage")
-                        .WithMany("MedicinePrescriptions")
-                        .HasForeignKey("DosageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MedicalPrescriptionManagementSystemWebApi.Models.Medicine", "Medicine")
-                        .WithMany("MedicinePrescriptions")
-                        .HasForeignKey("MedicineId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MedicalPrescriptionManagementSystemWebApi.Models.Prescription", "Prescription")
-                        .WithMany("MedicinePrescriptions")
-                        .HasForeignKey("PrescriptionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Dosage");
-
-                    b.Navigation("DosageFrequency");
-
-                    b.Navigation("Medicine");
-
-                    b.Navigation("Prescription");
-                });
-
             modelBuilder.Entity("MedicalPrescriptionManagementSystemWebApi.Models.Pharmacist", b =>
                 {
                     b.HasOne("MedicalPrescriptionManagementSystemWebApi.Models.ApplicationUser", "ApplicationUser")
@@ -641,26 +466,6 @@ namespace MedicalPrescriptionManagementSystemWebApi.Migrations
 
                     b.Navigation("Pharmacist")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("MedicalPrescriptionManagementSystemWebApi.Models.Dosage", b =>
-                {
-                    b.Navigation("MedicinePrescriptions");
-                });
-
-            modelBuilder.Entity("MedicalPrescriptionManagementSystemWebApi.Models.DosageFrequency", b =>
-                {
-                    b.Navigation("MedicinePrescriptions");
-                });
-
-            modelBuilder.Entity("MedicalPrescriptionManagementSystemWebApi.Models.Medicine", b =>
-                {
-                    b.Navigation("MedicinePrescriptions");
-                });
-
-            modelBuilder.Entity("MedicalPrescriptionManagementSystemWebApi.Models.Prescription", b =>
-                {
-                    b.Navigation("MedicinePrescriptions");
                 });
 #pragma warning restore 612, 618
         }

@@ -9,5 +9,7 @@
         public string Description { get; set; }
         public int Qty { get; set; }
         public decimal AveragePricePerUnit { get; set; }
+
+        public List<MedicinePrescription> MedicinePrescriptions { get; set; }
     }
 }

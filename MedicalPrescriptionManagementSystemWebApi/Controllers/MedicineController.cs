@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
-using MedicalPrescriptionManagementSystemWebApi.Models.Dtos;
 using MedicalPrescriptionManagementSystemWebApi.Models;
+using MedicalPrescriptionManagementSystemWebApi.Models.Dtos;
 using MedicalPrescriptionManagementSystemWebApi.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalPrescriptionManagementSystemWebApi.Controllers
@@ -27,13 +26,40 @@ namespace MedicalPrescriptionManagementSystemWebApi.Controllers
         }
 
         [HttpPost("AddNewMedicine")]
-        public async Task<IActionResult> AddNewMedicine(MedicineCreateDto medicineCreateDto)
+        public async Task<IActionResult> AddNewMedicine(MedicineUpsertDto medicineUpsertDto)
         {
-            Medicine medicine = _mapper.Map<Medicine>(medicineCreateDto);
+            Medicine medicine = _mapper.Map<Medicine>(medicineUpsertDto);
             var isSuccess = await _medicineService.AddNewMedicineAsync(medicine);
             if (!isSuccess)
                 return StatusCode(StatusCodes.Status406NotAcceptable, new ApiResponse { Status = "Erorr", Message = "Medicine Creation failed" });
             return Ok();
+        }
+
+        [HttpGet("GetMedicineSharedData")]
+        public async Task<IActionResult> GetAllMedicineSharedData()
+        {
+            var medicineSharedData = await _medicineService.GetAllMedicineSharedData();
+            return Ok(medicineSharedData);
+        }
+
+        [HttpPost("UpdateMedicine")]
+        public async Task<IActionResult> UpdateMedicine(MedicineUpsertDto medicineUpsertDto)
+        {
+            bool isSucess = await _medicineService.UpdateMedicineAsync(medicineUpsertDto);
+            if (!isSucess)
+                return StatusCode(StatusCodes.Status500InternalServerError);
+
+            return Ok();
+        }
+
+        [HttpGet("GetMedicineById")]
+        public async Task<IActionResult> GetMedicineById(int medicineId) 
+        {
+            var medicine = await _medicineService.GetMedicineByIdAsync(medicineId);
+            if(medicine == null)
+                return NotFound();
+
+            return Ok(medicine);    
         }
     }
 }

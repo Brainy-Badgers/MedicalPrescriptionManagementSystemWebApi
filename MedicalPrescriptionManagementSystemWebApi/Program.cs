@@ -46,7 +46,20 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("EmailOptions"));
 builder.Services.AddScoped<IMedicineService, MedicineService>();
+builder.Services.AddScoped<IDoctorService, DoctorService>();
+builder.Services.AddScoped<IPharmacistService, PharmacistService>();
+builder.Services.AddScoped<IPatientService, PatientService>();
+//configure development only dependacies 
+if (builder.Environment.EnvironmentName == "Development")
+{
+    builder.Services.AddScoped<IEmailService, EmailServiceDevelopment>();
+}
+else
+{
+    builder.Services.AddScoped<IEmailService, EmailService>();
+}
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

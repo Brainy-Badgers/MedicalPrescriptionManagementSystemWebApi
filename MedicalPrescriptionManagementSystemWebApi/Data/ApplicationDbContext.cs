@@ -9,6 +9,11 @@ namespace MedicalPrescriptionManagementSystemWebApi.Data
         public DbSet<Doctor> Doctors { get; set; }
         public DbSet<Pharmacist> Pharmacists { get; set; }
         public DbSet<Medicine> Medicines { get; set; }
+        public DbSet<Dosage> Dosages { get; set; }
+        public DbSet<DosageFrequency> DosageFrequencies { get; set; }
+        public DbSet<Patient> Patients { get; set; }
+        public DbSet<Prescription> Prescriptions { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
 
@@ -31,6 +36,8 @@ namespace MedicalPrescriptionManagementSystemWebApi.Data
             .HasOne<Pharmacist>(u => u.Pharmacist)
             .WithOne(p => p.ApplicationUser)
             .HasForeignKey<Pharmacist>(p => p.UserId);
+
+
 
             base.OnModelCreating(builder);
         }

@@ -13,6 +13,7 @@
         public string AddressLine01 { get; set; }
         public string AddressLine02 { get; set; }
         public string City { get; set; }
+        public string ProfilePicUrl { get; set; }
 
     }
 }

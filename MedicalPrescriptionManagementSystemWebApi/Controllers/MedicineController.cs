@@ -53,13 +53,24 @@ namespace MedicalPrescriptionManagementSystemWebApi.Controllers
         }
 
         [HttpGet("GetMedicineById")]
-        public async Task<IActionResult> GetMedicineById(int medicineId) 
+        public async Task<IActionResult> GetMedicineById(int medicineId)
         {
             var medicine = await _medicineService.GetMedicineByIdAsync(medicineId);
-            if(medicine == null)
+            if (medicine == null)
                 return NotFound();
 
-            return Ok(medicine);    
+            return Ok(medicine);
+        }
+
+        [HttpDelete("DeleteMedicine")]
+        public async Task<IActionResult> DeletePatientById(int medicineId)
+        {
+            var isSucess = await _medicineService.DeleteMedicineByIdAsync(medicineId);
+
+            if (!isSucess)
+                return StatusCode(StatusCodes.Status500InternalServerError);
+
+            return Ok();
         }
     }
 }

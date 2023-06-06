@@ -1,5 +1,5 @@
-﻿using MedicalPrescriptionManagementSystemWebApi.Models.Dtos;
-using MedicalPrescriptionManagementSystemWebApi.Models;
+﻿using MedicalPrescriptionManagementSystemWebApi.Models;
+using MedicalPrescriptionManagementSystemWebApi.Models.Dtos;
 
 namespace MedicalPrescriptionManagementSystemWebApi.Services
 {
@@ -10,5 +10,6 @@ namespace MedicalPrescriptionManagementSystemWebApi.Services
         Task<MedicineSharedDataListDto> GetAllMedicineSharedData();
         Task<bool> UpdateMedicineAsync(MedicineUpsertDto medicineUpsertDto);
         Task<MedicineUpsertDto> GetMedicineByIdAsync(int medicineId);
+        Task<bool> DeleteMedicineByIdAsync(int medicineId);
     }
 }

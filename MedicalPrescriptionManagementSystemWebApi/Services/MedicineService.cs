@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MedicalPrescriptionManagementSystemWebApi.Data;
-using MedicalPrescriptionManagementSystemWebApi.Models.Dtos;
 using MedicalPrescriptionManagementSystemWebApi.Models;
+using MedicalPrescriptionManagementSystemWebApi.Models.Dtos;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedicalPrescriptionManagementSystemWebApi.Services
@@ -39,15 +39,13 @@ namespace MedicalPrescriptionManagementSystemWebApi.Services
         {
             MedicineSharedDataListDto medicineSharedDataList = new MedicineSharedDataListDto();
             medicineSharedDataList.Medicines = await _context.Medicines.ToListAsync();
-            medicineSharedDataList.Dosages = await _context.Dosages.ToListAsync();
-            medicineSharedDataList.DosageFrequencies = await _context.DosageFrequencies.ToListAsync();
-
             return medicineSharedDataList;
         }
         public async Task<bool> UpdateMedicineAsync(MedicineUpsertDto medicineUpsertDto)
         {
             var medicine = _mapper.Map<Medicine>(medicineUpsertDto);
             medicine.UpdatedOn = DateTime.Now;
+            medicine.IsActive = true;
 
             _context.Medicines.Update(medicine);
             var result = await _context.SaveChangesAsync();
@@ -66,6 +64,23 @@ namespace MedicalPrescriptionManagementSystemWebApi.Services
 
             return null;
 
+        }
+
+        public async Task<bool> DeleteMedicineByIdAsync(int medicineId)
+        {
+            var medicine = await _context.Medicines.FirstOrDefaultAsync(m => m.MedicineId == medicineId);
+
+            if (medicine == null)
+                return false;
+
+            medicine.IsActive = false;
+            _context.Medicines.Update(medicine);
+            var result = await _context.SaveChangesAsync();
+
+            if (result > 0)
+                return true;
+            else
+                return false;
         }
 
     }

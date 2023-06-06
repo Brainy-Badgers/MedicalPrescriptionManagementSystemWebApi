@@ -57,7 +57,9 @@ namespace MedicalPrescriptionManagementSystemWebApi.Controllers
                 LastName = model.LastName,
                 DOB = model.DOB,
                 IsActive = true,
-                CreatedOn = DateTime.UtcNow
+                CreatedOn = DateTime.UtcNow,
+                ConfirmationFileUrl = model.ConfirmationFileUrl,
+                ActiveStatus = RecordStates.ACTIVE
             };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
@@ -111,7 +113,9 @@ namespace MedicalPrescriptionManagementSystemWebApi.Controllers
                 DOB = model.DOB,
                 IsActive = true,
                 CreatedOn = DateTime.UtcNow,
-                Doctor = doctor
+                ConfirmationFileUrl = model.ConfirmationFileUrl,
+                Doctor = doctor,
+                ActiveStatus = RecordStates.PENDING
             };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
@@ -153,7 +157,9 @@ namespace MedicalPrescriptionManagementSystemWebApi.Controllers
                 DOB = model.DOB,
                 IsActive = true,
                 CreatedOn = DateTime.UtcNow,
-                Pharmacist = pharmacist
+                ConfirmationFileUrl = model.ConfirmationFileUrl,
+                Pharmacist = pharmacist,
+                ActiveStatus = RecordStates.PENDING
             };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
@@ -173,7 +179,13 @@ namespace MedicalPrescriptionManagementSystemWebApi.Controllers
         public async Task<IActionResult> Login(LoginModel model)
         {
             var user = await _userManager.FindByNameAsync(model.Email);
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+
+            if (user.ActiveStatus != RecordStates.ACTIVE)
+            {
+                return Unauthorized("Account is not Active, Please contact your Admin");
+            }
+
+            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password) && user.ActiveStatus == RecordStates.ACTIVE)
             {
                 var userRolesList = await _userManager.GetRolesAsync(user);
 
@@ -193,18 +205,13 @@ namespace MedicalPrescriptionManagementSystemWebApi.Controllers
                 return Ok(new
                 {
                     token = token,
-                    userType = userRolesList.Any(r => r == UserRoles.ADMIN) ? UserRoles.ADMIN : userRolesList.First()
+                    userType = userRolesList.Any(r => r == UserRoles.ADMIN) ? UserRoles.ADMIN : userRolesList.First(),
+                    userId = user.Id
                 });
             }
-            return Unauthorized();
+            return Unauthorized("Email or password is incorrect");
         }
 
-        [HttpGet("TestEmailApi")]
-        public async Task<IActionResult> TestEmailAsync()
-        {
-            await _emailService.SendEmailAsSystemAsync("medicalprescriptionmanagementr@gmail.com", "Test mail", "This is a test email from MPMS");
-            return Ok();
-        }
         private string GetJwtToken(List<Claim> authClaims)
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));

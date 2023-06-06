@@ -51,6 +51,8 @@ builder.Services.AddScoped<IMedicineService, MedicineService>();
 builder.Services.AddScoped<IDoctorService, DoctorService>();
 builder.Services.AddScoped<IPharmacistService, PharmacistService>();
 builder.Services.AddScoped<IPatientService, PatientService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IPrescriptionService, PrescriptionService>();
 //configure development only dependacies 
 if (builder.Environment.EnvironmentName == "Development")
 {

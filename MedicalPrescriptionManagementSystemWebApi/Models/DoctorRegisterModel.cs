@@ -10,5 +10,6 @@
         public string Specialization { get; set; } = "Default Specialization";
         public string HospitalName { get; set; } = "Default Hospital name";
         public string? ContactNo { get; set; }
+        public string? ConfirmationFileUrl { get; set; }
     }
 }

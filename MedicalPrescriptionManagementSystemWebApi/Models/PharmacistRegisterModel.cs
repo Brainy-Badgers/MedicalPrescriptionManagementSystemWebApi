@@ -12,5 +12,6 @@
         public string? AddressLine02 { get; set; }
         public string? City { get; set; }
         public string? ContactNo { get; set; }
+        public string? ConfirmationFileUrl { get; set; }
     }
 }

@@ -3,7 +3,6 @@ using MedicalPrescriptionManagementSystemWebApi.Data;
 using MedicalPrescriptionManagementSystemWebApi.Models;
 using MedicalPrescriptionManagementSystemWebApi.Models.Dtos;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics.Contracts;
 
 namespace MedicalPrescriptionManagementSystemWebApi.Services
 {
@@ -29,6 +28,7 @@ namespace MedicalPrescriptionManagementSystemWebApi.Services
 
         public async Task<bool> CreatePatientAsync(PatientUpsertDto patientUpsertDto)
         {
+            patientUpsertDto.IsActive = true;
             await _dbContext.Patients.AddAsync(_mapper.Map<Patient>(patientUpsertDto));
             var result = await _dbContext.SaveChangesAsync();
 
@@ -40,6 +40,7 @@ namespace MedicalPrescriptionManagementSystemWebApi.Services
 
         public async Task<bool> UpdatePatientAsync(PatientUpsertDto patientUpsertDto)
         {
+            patientUpsertDto.IsActive = true;
             _dbContext.Patients.Update(_mapper.Map<Patient>(patientUpsertDto));
             var result = await _dbContext.SaveChangesAsync();
 

@@ -52,5 +52,18 @@ namespace MedicalPrescriptionManagementSystemWebApi.Controllers
             }
         }
 
+        [HttpPost("GetPatientHistoryByPatientId")]
+        public async Task<IActionResult> GetPatientHistoryByPatientId(int patientId)
+        {
+            var prescriptionList = await _prescriptionService.GetPatientHistoryByPatientId(patientId);
+            if (prescriptionList.Count > 0)
+            {
+                return Ok(prescriptionList);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
     }
 }

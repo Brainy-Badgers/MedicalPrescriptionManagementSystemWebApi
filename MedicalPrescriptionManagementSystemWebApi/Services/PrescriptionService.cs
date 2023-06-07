@@ -111,11 +111,23 @@ namespace MedicalPrescriptionManagementSystemWebApi.Services
                 {
                     var qrLink = string.Concat(_configuration.GetValue<string>("ClientAppBaseUrl"), _configuration.GetValue<string>("PrescriptionViewPageRoute"), prescription.PrescriptionId);
                     var emailSubject = _configuration.GetValue<string>("PrescriptionEmailSubject");
-                    var emailbody = String.Format( _configuration.GetValue<string>("PrescriptionEmailBody"),patient.FirstName,prescription.PrescriptionId, qrLink);
-                    
+                    var emailbody = String.Format(_configuration.GetValue<string>("PrescriptionEmailBody"), patient.FirstName, prescription.PrescriptionId, qrLink);
+
                     await _emailService.SendQREmailAsSystemAsync(patient.Email, emailSubject, emailbody, qrLink);
                 }
             }
+        }
+
+        public async Task<List<PrescriptionUpsertDto>> GetPatientHistoryByPatientId(int patientId)
+        {
+            var prescriptionList = _context.Prescriptions.Where(p => p.PatientId == patientId).ToList();
+
+            List<PrescriptionUpsertDto> patientPrescriptionsList = new List<PrescriptionUpsertDto>();
+            foreach (var prescription in prescriptionList)
+            {
+                patientPrescriptionsList.Add(await GetPrescriptionByIdAsync(prescription.PrescriptionId));
+            }
+            return patientPrescriptionsList;
         }
     }
 }

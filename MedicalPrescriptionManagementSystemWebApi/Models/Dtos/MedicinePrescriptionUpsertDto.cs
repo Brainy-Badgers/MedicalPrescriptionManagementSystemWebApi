@@ -10,6 +10,7 @@
         public string? Dosage { get; set; }
         public string? DosageFrequency { get; set; }
         public int MedicineId { get; set; }
+        public MedicineUpsertDto? medicineUpsertDto { get; set; }
         public int PrescriptionId { get; set; }
     }
 }

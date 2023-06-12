@@ -19,9 +19,14 @@ namespace MedicalPrescriptionManagementSystemWebApi.Services
         }
         public async Task<DoctorUpsertDto> GetDoctorDetailsByUserIdAsync(string userId)
         {
+            
             DoctorUpsertDto doctorDetailsDto = new DoctorUpsertDto();
-            var userDetails = await _dbContext.Users.Include(u => u.Doctor).FirstOrDefaultAsync(u => u.Id == userId);
-            doctorDetailsDto = _mapper.Map<DoctorUpsertDto>(userDetails);
+            var doctorDetails = await _dbContext.Doctors.FirstOrDefaultAsync(c => c.UserId == userId);
+            if (doctorDetails != null)
+            {
+                var userDetails = await _dbContext.Users.Include(u => u.Doctor).FirstOrDefaultAsync(u => u.Id == userId);
+                doctorDetailsDto = _mapper.Map<DoctorUpsertDto>(userDetails);
+            }
             return doctorDetailsDto;
         }
     }

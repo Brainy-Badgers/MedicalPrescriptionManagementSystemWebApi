@@ -38,7 +38,7 @@ namespace MedicalPrescriptionManagementSystemWebApi.Services
         public async Task<MedicineSharedDataListDto> GetAllMedicineSharedData()
         {
             MedicineSharedDataListDto medicineSharedDataList = new MedicineSharedDataListDto();
-            medicineSharedDataList.Medicines = await _context.Medicines.ToListAsync();
+            medicineSharedDataList.Medicines = await _context.Medicines.Where(m => m.IsActive != false).ToListAsync();
             return medicineSharedDataList;
         }
         public async Task<bool> UpdateMedicineAsync(MedicineUpsertDto medicineUpsertDto)

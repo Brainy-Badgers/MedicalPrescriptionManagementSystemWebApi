@@ -22,8 +22,23 @@ namespace MedicalPrescriptionManagementSystemWebApi.Services
         }
         public async Task<PrescriptionUpsertDto> GetPrescriptionByIdAsync(int prescriptionId)
         {
-            var prescrption = await _context.Prescriptions.Include(p => p.MedicinePrescriptions).FirstOrDefaultAsync(p => p.PrescriptionId == prescriptionId);
+            var prescrption = await _context.Prescriptions.Include(p => p.MedicinePrescriptions).ThenInclude(mp => mp.Medicine).FirstOrDefaultAsync(p => p.PrescriptionId == prescriptionId);
             var prescriptionUpserDto = _mapper.Map<PrescriptionUpsertDto>(prescrption);
+            var doctorDetails = await _context.Doctors.FirstOrDefaultAsync(d => d.DoctorId == prescrption.DoctorId);
+            var userDetailsofDoctor = await _context.Users.FirstOrDefaultAsync(u => u.Id == doctorDetails.UserId);
+            if (doctorDetails != null)
+            {
+                prescriptionUpserDto.DoctorFirstName = userDetailsofDoctor.FirstName;
+                prescriptionUpserDto.DoctorLastName = userDetailsofDoctor.LastName;
+                prescriptionUpserDto.Specialization = doctorDetails.Specialization;
+                prescriptionUpserDto.HospitalName = doctorDetails.HospitalName;
+                prescriptionUpserDto.ContactNo = doctorDetails.ContactNo;
+            }
+            Patient patient = await _context.Patients.FirstOrDefaultAsync(p => p.PatientId == prescrption.PatientId);
+            if (patient != null)
+            {
+                prescriptionUpserDto .PatientName = patient.FirstName + " " + patient.LastName;
+            }
             return prescriptionUpserDto;
         }
 
@@ -126,6 +141,26 @@ namespace MedicalPrescriptionManagementSystemWebApi.Services
             foreach (var prescription in prescriptionList)
             {
                 patientPrescriptionsList.Add(await GetPrescriptionByIdAsync(prescription.PrescriptionId));
+            }
+            return patientPrescriptionsList;
+        }
+
+        public async Task<List<PrescriptionUpsertDto>> GetPrescriptionsAsync()
+        {
+            var prescriptionList = _context.Prescriptions.ToList();
+
+            List<PrescriptionUpsertDto> patientPrescriptionsList = new List<PrescriptionUpsertDto>();
+            foreach (var prescription in prescriptionList)
+            {
+                try
+                {
+                    var prescriptionToAdd = await GetPrescriptionByIdAsync(prescription.PrescriptionId);
+                    patientPrescriptionsList.Add(prescriptionToAdd);
+                }
+                catch
+                {
+
+                }
             }
             return patientPrescriptionsList;
         }

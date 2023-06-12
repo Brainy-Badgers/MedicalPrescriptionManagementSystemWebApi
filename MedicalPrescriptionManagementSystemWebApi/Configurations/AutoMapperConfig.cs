@@ -18,6 +18,7 @@ namespace MedicalPrescriptionManagementSystemWebApi.Configurations
                         .ForMember(dest => dest.Specialization, opt => opt.MapFrom(src => src.Doctor.Specialization))
                         .ForMember(dest => dest.HospitalName, opt => opt.MapFrom(src => src.Doctor.HospitalName))
                         .ForMember(dest => dest.ContactNo, opt => opt.MapFrom(src => src.Doctor.ContactNo))
+                        .ForMember(dest => dest.DoctorId, opt => opt.MapFrom(src => src.Doctor.DoctorId))
                         .ReverseMap();
             CreateMap<ApplicationUser, PharmacistUpsertDto>()
                         .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id))
@@ -43,7 +44,9 @@ namespace MedicalPrescriptionManagementSystemWebApi.Configurations
                    .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => src.IsActive))
                    .ForMember(dest => dest.medicinePrescriptionUpsertDtos, opt => opt.MapFrom(src => src.MedicinePrescriptions))
                 .ReverseMap();
-            CreateMap<MedicinePrescription, MedicinePrescriptionUpsertDto>().ReverseMap();
+            CreateMap<MedicinePrescription, MedicinePrescriptionUpsertDto>()
+                .ForMember(dest => dest.medicineUpsertDto, opt => opt.MapFrom(src => src.Medicine))
+                .ReverseMap();
         }
     }
 }

@@ -1,7 +1,5 @@
-﻿using MedicalPrescriptionManagementSystemWebApi.Models;
-using MedicalPrescriptionManagementSystemWebApi.Models.Dtos;
+﻿using MedicalPrescriptionManagementSystemWebApi.Models.Dtos;
 using MedicalPrescriptionManagementSystemWebApi.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalPrescriptionManagementSystemWebApi.Controllers
@@ -14,6 +12,14 @@ namespace MedicalPrescriptionManagementSystemWebApi.Controllers
         public PrescriptionController(IPrescriptionService prescriptionService)
         {
             _prescriptionService = prescriptionService;
+        }
+
+        [HttpPost("GetPrescriptions")]
+        public async Task<IActionResult> GetPrescriptions()
+        {
+            var prescriptions = await _prescriptionService.GetPrescriptionsAsync();
+            if (prescriptions == null) { return NotFound(); }
+            return Ok(prescriptions);
         }
 
         [HttpPost("GetPrescriptionById")]

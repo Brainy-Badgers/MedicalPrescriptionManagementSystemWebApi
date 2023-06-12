@@ -179,37 +179,40 @@ namespace MedicalPrescriptionManagementSystemWebApi.Controllers
         public async Task<IActionResult> Login(LoginModel model)
         {
             var user = await _userManager.FindByNameAsync(model.Email);
-
-            if (user.ActiveStatus != RecordStates.ACTIVE)
+            if (user != null)
             {
-                return Unauthorized("Account is not Active, Please contact your Admin");
-            }
+                if (user.ActiveStatus != RecordStates.ACTIVE)
+                {
+                    return Unauthorized("Account is not Active, Please contact your Admin");
+                }
 
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password) && user.ActiveStatus == RecordStates.ACTIVE)
-            {
-                var userRolesList = await _userManager.GetRolesAsync(user);
+                if (user != null && await _userManager.CheckPasswordAsync(user, model.Password) && user.ActiveStatus == RecordStates.ACTIVE)
+                {
+                    var userRolesList = await _userManager.GetRolesAsync(user);
 
-                var authClaims = new List<Claim>
+                    var authClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 };
 
-                foreach (var userRole in userRolesList)
-                {
-                    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+                    foreach (var userRole in userRolesList)
+                    {
+                        authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+                    }
+
+                    var token = GetJwtToken(authClaims);
+
+                    return Ok(new
+                    {
+                        token = token,
+                        userType = userRolesList.Any(r => r == UserRoles.ADMIN) ? UserRoles.ADMIN : userRolesList.First(),
+                        userId = user.Id
+                    });
                 }
-
-                var token = GetJwtToken(authClaims);
-
-                return Ok(new
-                {
-                    token = token,
-                    userType = userRolesList.Any(r => r == UserRoles.ADMIN) ? UserRoles.ADMIN : userRolesList.First(),
-                    userId = user.Id
-                });
+                return Unauthorized("Email or password is incorrect");
             }
-            return Unauthorized("Email or password is incorrect");
+            return Unauthorized("Something went wrong");
         }
 
         private string GetJwtToken(List<Claim> authClaims)

@@ -1,5 +1,4 @@
-﻿using MedicalPrescriptionManagementSystemWebApi.Models;
-using MedicalPrescriptionManagementSystemWebApi.Models.Dtos;
+﻿using MedicalPrescriptionManagementSystemWebApi.Models.Dtos;
 
 namespace MedicalPrescriptionManagementSystemWebApi.Services
 {
@@ -9,5 +8,6 @@ namespace MedicalPrescriptionManagementSystemWebApi.Services
         Task<bool> CreatePrescription(PrescriptionUpsertDto prescriptionUpsertDto);
         Task<bool> UpdatePrescription(PrescriptionUpsertDto prescriptionUpsertDto);
         Task<List<PrescriptionUpsertDto>> GetPatientHistoryByPatientId(int patientId);
+        Task<List<PrescriptionUpsertDto>> GetPrescriptionsAsync();
     }
 }

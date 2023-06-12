@@ -11,5 +11,6 @@
         public DateTime? CreatedOn { get; set; }
         public string? ConfirmationFileUrl { get; set; }
         public string? ProfilePicUrl { get; set; }
+        public string Email { get; set; }
     }
 }

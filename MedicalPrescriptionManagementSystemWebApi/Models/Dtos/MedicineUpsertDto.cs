@@ -9,5 +9,6 @@
         public string Description { get; set; }
         public int Qty { get; set; }
         public decimal AveragePricePerUnit { get; set; }
+        public bool IsActive { get; set; }
     }
 }
